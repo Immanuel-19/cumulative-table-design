@@ -1,31 +1,31 @@
--- Creating a "struct" data type: season_stats to hold the season's attributes (temporal dimensions dependent on time and can change)
+-- -- Creating a "struct" data type: season_stats to hold the season's attributes (temporal dimensions dependent on time and can change)
 
-CREATE TYPE season_stats AS (
-	season INTEGER,
-	gp INTEGER,
-	pts REAL,
-	reb REAL,
-	ast REAL
-);
+-- CREATE TYPE season_stats AS (
+-- 	season INTEGER,
+-- 	gp INTEGER,
+-- 	pts REAL,
+-- 	reb REAL,
+-- 	ast REAL
+-- );
 
-CREATE TYPE scoring_class AS ENUM ('star', 'good', 'average', 'bad');
+-- CREATE TYPE scoring_class AS ENUM ('star', 'good', 'average', 'bad');
 
--- Creating a "players" table to hold the player's attributes and an array of the season's attributes
+-- -- Creating a "players" table to hold the player's attributes and an array of the season's attributes
 
-CREATE TABLE players (
-	player_name TEXT,
-	height TEXT,
-	college TEXT,
-	country TEXT,
-	draft_year TEXT,
-	draft_round TEXT,
-	draft_number TEXT,
-	season_stats season_stats[],
-	scoring_class scoring_class,
-	years_since_last_season INTEGER,
-	current_season INTEGER,
-	PRIMARY KEY (player_name, current_season)
-);
+-- CREATE TABLE players (
+-- 	player_name TEXT,
+-- 	height TEXT,
+-- 	college TEXT,
+-- 	country TEXT,
+-- 	draft_year TEXT,
+-- 	draft_round TEXT,
+-- 	draft_number TEXT,
+-- 	season_stats season_stats[],
+-- 	scoring_class scoring_class,
+-- 	years_since_last_season INTEGER,
+-- 	current_season INTEGER,
+-- 	PRIMARY KEY (player_name, current_season)
+-- );
 
 
 -- Creating a cumulative table that accumulates over time
@@ -37,7 +37,7 @@ WITH yesterday AS (
 	FROM
 		players
 	WHERE
-		current_season = 1996
+		current_season = 2000
 ),
 	today AS (
 		SELECT 
@@ -45,7 +45,7 @@ WITH yesterday AS (
 		FROM
 			player_seasons
 		WHERE
-			season = 1997
+			season = 2001
 	)
 
 SELECT 
@@ -99,6 +99,15 @@ FULL OUTER JOIN yesterday AS y
 ;
 
 
-SELECT * FROM players;
-
+SELECT 
+	player_name,
+	(season_stats[CARDINALITY(season_stats)]::season_stats).pts /
+	CASE
+		WHEN (season_stats[1]::season_stats).pts = 0 THEN 1
+		ELSE (season_stats[1]::season_stats).pts
+	END
+FROM players
+WHERE current_season = 2001 AND scoring_class = 'star'
+ORDER BY 2 DESC
+;
 
