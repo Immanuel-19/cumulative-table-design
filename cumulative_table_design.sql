@@ -1,31 +1,32 @@
--- -- Creating a "struct" data type: season_stats to hold the season's attributes (temporal dimensions dependent on time and can change)
+-- Creating a "struct" data type: season_stats to hold the season's attributes (temporal dimensions dependent on time and can change)
 
--- CREATE TYPE season_stats AS (
--- 	season INTEGER,
--- 	gp INTEGER,
--- 	pts REAL,
--- 	reb REAL,
--- 	ast REAL
--- );
+CREATE TYPE season_stats AS (
+	season INTEGER,
+	gp INTEGER,
+	pts REAL,
+	reb REAL,
+	ast REAL
+);
 
--- CREATE TYPE scoring_class AS ENUM ('star', 'good', 'average', 'bad');
+CREATE TYPE scoring_class AS ENUM ('star', 'good', 'average', 'bad');
 
--- -- Creating a "players" table to hold the player's attributes and an array of the season's attributes
+-- Creating a "players" table to hold the player's attributes and an array of the season's attributes
 
--- CREATE TABLE players (
--- 	player_name TEXT,
--- 	height TEXT,
--- 	college TEXT,
--- 	country TEXT,
--- 	draft_year TEXT,
--- 	draft_round TEXT,
--- 	draft_number TEXT,
--- 	season_stats season_stats[],
--- 	scoring_class scoring_class,
--- 	years_since_last_season INTEGER,
--- 	current_season INTEGER,
--- 	PRIMARY KEY (player_name, current_season)
--- );
+CREATE TABLE players (
+	player_name TEXT,
+	height TEXT,
+	college TEXT,
+	country TEXT,
+	draft_year TEXT,
+	draft_round TEXT,
+	draft_number TEXT,
+	season_stats season_stats[],
+	scoring_class scoring_class,
+	years_since_last_season INTEGER,
+	current_season INTEGER,
+	is_active BOOLEAN,
+	PRIMARY KEY (player_name, current_season)
+);
 
 
 -- Creating a cumulative table that accumulates over time
